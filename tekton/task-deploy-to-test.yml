@@ -1,0 +1,27 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-to-test
+spec:
+  inputs:
+    params:
+      - name: APP_NAME
+        description: The name of the application
+        default: 'infographic'
+      - name: NAMESPACE_DEV
+        description: The name of the namespace dev
+        default: 'infographic-dev'
+      - name: NAMESPACE_TEST
+        description: The name of the namespace build
+        default: 'infographic-test'
+  steps:
+    - name:
+      params:
+        - name: SCRIPT
+          value: oc $@
+        - name: ARGS
+          value:
+            - tag $(inputs.params.NAMESPACE_DEV)/$(inputs.params.APP_NAME):latest $(inputs.params.NAMESPACE_TEST)/$(inputs.params.APP_NAME):latest
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client

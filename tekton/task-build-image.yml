@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-image
+spec:
+  inputs:
+    params:
+      - name: APP_NAME
+        description: The name of the application
+        default: 'infographic'
+  outputs:
+    resources:
+      - name: image
+        type: image
+  steps:
+    - name: build-image
+      params:
+        - name: SCRIPT
+          value: oc $@
+        - name: ARGS
+          value:
+            - start-build $(inputs.params.APP_NAME) --from-dir=. --follow
+      taskRef:
+        kind: ClusterTask
+        name: openshift-client

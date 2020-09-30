@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: security-scanning
+spec:
+  results:
+    - name: sec-scan-out
+      description: 
+  steps:
+    - name: sec-scan-out
+      image: bash:latest
+      script: |
+        #!/usr/bin/env bash
+        echo 'Security Scanning... please wait' | tee $(results.sec-scan-out.path)
+        sleep 3
