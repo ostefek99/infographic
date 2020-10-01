@@ -3,23 +3,20 @@ kind: Task
 metadata:
   name: build-image
 spec:
-  inputs:
-    params:
-      - name: APP_NAME
-        description: The name of the application
-        default: 'infographic'
-  outputs:
-    resources:
-      - name: image
-        type: image
+  resources:
+    inputs:
+      - name: source
+        type: git
+  params:
+    - name: APP_NAME
+      description: The name of the application
+      default: 'infographic'
+    - name: SCRIPT 
+      type: string
+      default: 'oc $@'
   steps:
     - name: build-image
-      params:
-        - name: SCRIPT
-          value: oc $@
-        - name: ARGS
-          value:
-            - start-build $(inputs.params.APP_NAME) --from-dir=. --follow
-      taskRef:
-        kind: ClusterTask
-        name: openshift-client
+      image: quay.io/openshift/origin-cli:latest
+      script: "$(params.SCRIPT)"
+      args:
+        - "start-build $(params.APP_NAME) --from-dir=. --follow"

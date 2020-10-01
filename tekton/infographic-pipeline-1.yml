@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: infographic-pipeline-1
+spec:
+  resources:
+    - name: infographic-repo
+      type: git
+  params:
+    - name: APP_NAME
+      default: 'infographic'
+  tasks:
+    - name: build-image
+      resources:
+        inputs:
+          - name: source
+            resource: infographic-repo
+      taskRef:
+        name: openshift-client
+        kind: ClusterTask
+      params:
+        - name: SCRIPT
+          value: |
+            "oc start-build $(params.APP_NAME)"
+#    - name: tag-image
+#      taskRef:
+#        name: openshift-client
+#        kind: ClusterTask
+#      runAfter:
+#        - build-image
+#      params:
+#        - name: SCRIPT
+#          value: |
+#            oc tag client:latest client:$(tasks.generate-id.results.short-commit)-$(tasks.generate-id.results.build-uid)

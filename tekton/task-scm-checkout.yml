@@ -3,28 +3,21 @@ kind: Task
 metadata:
   name: scm-checkout
 spec:
-  workspaces:
-  - name: infographic-workspace
   params:
-    - name: application_source_repo_url
+    - name: url
       description: Repository source URL
-    - name: application_source_repo_ref
+    - name: revision
       description: Repository source branch/reference
+    - name: submodules
+      description: some text
+    - name: depth
+      description: some text
+    - name: sslVerify
+      description: some text
+    - name: deleteExisting
+      description: some text
   steps:
     - name: scm-checkout
-      params:
-        - name: url
-          value: application_source_repo_url
-        - name: revision
-          value: application_source_repo_ref
-        - name: submodules
-          value: 'true'
-        - name: depth
-          value: '1'
-        - name: sslVerify
-          value: 'false'
-        - name: deleteExisting
-          value: 'false'
       taskRef:
         kind: ClusterTask
         name: git-clone

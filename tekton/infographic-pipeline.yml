@@ -10,6 +10,18 @@ spec:
       type: git
 
   params:
+    - name: submodules
+      description: some text
+      default: 'true'
+    - name: depth
+      description: some text
+      default: '1'
+    - name: sslVerify
+      description: some text
+      default: 'false'
+    - name: deleteExisting
+      description: some text
+      default: 'false'
     - name: APP_NAME
       description: The name of the application
       default: 'infographic'
@@ -32,32 +44,34 @@ spec:
       name: scm-checkout
     resources:
       inputs:
-        - name: source-url
-          resource: APPLICATION_SOURCE_REPO_URL
-        - name: source-ref
-          resource: APPLICATION_SOURCE_REPO_REF
+        - name: APPLICATION_SOURCE_REPO_URL
+          resource: infographic-repo
+        - name: APPLICATION_SOURCE_REPO_REF
+          resource: infographic-repo
+        - name: submodules
+          resource: submodules
   - name: build-image
     taskRef:
-      name:
+      name: build-image
     runAfter:
       - scm-checkout
   - name: security-scanning
     taskRef:
-      name: 
+      name: security-scanning
     runAfter:
       - build-image
   - name: deploy-to-dev
     taskRef:
-      name:
+      name: deploy-to-dev
     runAfter:
       - security-scanning
   - name: deploy-to-test
     taskRef:
-      name:
+      name: deploy-to-test
     runAfter:
       - deploy-to-dev
   - name: deploy-to-uat
     taskRef:
-      name:
+      name: deploy-to-uat
     runAfter:
       - deploy-to-test
